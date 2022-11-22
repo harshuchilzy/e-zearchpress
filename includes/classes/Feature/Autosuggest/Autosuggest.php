@@ -498,6 +498,14 @@ class Autosuggest extends Feature {
 				$epas_options
 			)
 		);
+
+		wp_enqueue_script(
+			'elasticpress-autosuggest-custom',
+			EP_URL . 'dist/js/autosuggest-script-custom.js',
+			Utils\get_asset_info( 'autosuggest-script', 'dependencies' ),
+			Utils\get_asset_info( 'autosuggest-script', 'version' ),
+			true
+		);
 	}
 
 	/**

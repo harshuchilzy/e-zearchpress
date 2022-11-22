@@ -1,13 +1,13 @@
 <?php
 /**
- * Plugin Name:       ElasticPress
+ * Plugin Name:       e-Zearch
  * Plugin URI:        https://github.com/10up/ElasticPress
  * Description:       A fast and flexible search and query engine for WordPress.
  * Version:           4.3.1
  * Requires at least: 5.6
  * Requires PHP:      7.0
- * Author:            10up
- * Author URI:        https://10up.com
+ * Author:            DayZ Solutions
+ * Author URI:        https://dayzsolutions.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       elasticpress
@@ -239,3 +239,5 @@ add_action( 'plugins_loaded', __NAMESPACE__ . '\setup_misc' );
  * @hook elasticpress_loaded
  */
 do_action( 'elasticpress_loaded' );
+
+// add_filter( 'ep_autosuggest_default_selectors', '__return_empty_string' );

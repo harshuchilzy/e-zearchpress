@@ -49,7 +49,8 @@ function setup() {
 	add_filter( 'wp_kses_allowed_html', __NAMESPACE__ . '\filter_allowed_html', 10, 2 );
 	add_action( 'manage_blogs_custom_column', __NAMESPACE__ . '\add_blogs_column', 10, 2 );
 	add_action( 'rest_api_init', __NAMESPACE__ . '\setup_endpoint' );
-
+	// add_action( 'rest_api_init', __NAMESPACE__ . '\setup_autosuggest' );
+	
 	/**
 	 * Filter whether to show 'ElasticPress Indexing' option on Multisite in admin UI or not.
 	 *
@@ -906,6 +907,41 @@ function setup_endpoint() {
 			'permission_callback' => '__return_true',
 		]
 	);
+}
+
+function setup_autosuggest() {
+	register_rest_route( 'elasticpress', '/autosuggest', [
+		'methods' => \WP_REST_Server::CREATABLE,
+		'callback' => '\ep_autosuggest',
+	] );
+}
+
+/**
+ * Elasticpress Autosuggest Endpoint Callback
+ *
+ * gets host and index name dynamically. Otherwise,
+ * if not specified, host would default to localhost:9200
+ * and index name would default to 'index'
+ *
+ * @param \WP_REST_Request $data
+ * @return array|callable
+ */
+function ep_autosuggest( \WP_REST_Request $data ) {
+    if ( defined( 'EP_HOST' ) && EP_HOST ) {
+		$host = EP_HOST;
+	} else {
+		$host = get_option( 'ep_host', false );
+	}
+    $client = ClientBuilder::create();
+    $client->setHosts(['http://localhost:9200']); // get host dynamically
+    $client = $client->build();
+    $params = [
+        'index' => 'localhostzearchwp-post-1', // get index dynamically
+        'type' => 'post',
+        'body' => $data->get_body()
+    ];
+    $response = $client->search( $params );
+    return $response;
 }
 
 /**
